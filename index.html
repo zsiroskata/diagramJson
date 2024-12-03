@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="myChart" width="400" height="200"></canvas>
+
+    <script>
+        const dataUrl = "http://localhost/Vizfogyasztas/water_data.php";
+
+        fetch(dataUrl)
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(jsonData){
+            const xValues = jsonData.map(function(item){
+                return item.year;
+            });
+
+            const yValues = jsonData.map(function(item){
+                return item.residential_consumption;
+            });
+
+            console.log("fogyasztas adatok: ", yValues);
+
+            const barColors = ["red", "orange", "green", "yellow", "blue", "purple", "black"];
+
+            new Chart("myChart", {
+                type: 'bar',
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        label: 'Lakók fogyasztási adatai',
+                        data: yValues,
+                        backgroundColor: barColors,
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Lakossági vízfogyasztási évente',
+                        fontSize: 24
+                    }
+                }
+            });
+        })
+        .catch(function(error) {
+            console.error("Hiba történt az adatok lekérésekor:", error);
+        });
+    </script>
+</body>
+</html>
